@@ -10,22 +10,61 @@ function createPostsList(posts) {
     for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
 
-        // creating paragraph
-        const strongEl = document.createElement('strong');
-        strongEl.textContent = post.title;
+        const linkEl = document.createElement('a');
+
+        linkEl.textContent =post.title;
+        linkEl.href="javascript:void(0);";
+        linkEl.onclick = function() {onPostClicked(i+1)};         
+        
+        nestedUlEl = document.createElement('ul');
+        nestedUlEl.id = ('id','nestedUl'+(i+1));
+        nestedUlEl.classList.add('nestedUl');
 
         const pEl = document.createElement('p');
-        pEl.appendChild(strongEl);
         pEl.appendChild(document.createTextNode(`: ${post.body}`));
 
-        // creating list item
         const liEl = document.createElement('li');
+        liEl.appendChild(linkEl);
         liEl.appendChild(pEl);
+        liEl.appendChild(nestedUlEl);
 
         ulEl.appendChild(liEl);
     }
 
     return ulEl;
+}
+
+function showNestedUl(id){
+    const nestedUls = document.getElementsByClassName('nestedUl')
+    for (let i = 0; i < nestedUls.length; i++){
+        nestedUls[i].classList.add('hidden');
+    }
+    nestedUls[id-1].classList.remove('hidden');
+}
+
+function onPostClicked(postId){
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', onCommentsReceived);
+    xhr.open('GET', BASE_URL + '/comments?postId=' + postId);
+    xhr.send();
+}
+
+function onCommentsReceived(){
+    const text = this.responseText;
+    const comments = JSON.parse(text);
+    showNestedUl(comments[0].postId);
+
+    const divEl = document.getElementById('nestedUl'+ comments[0].postId);
+
+    while (divEl.firstChild) {
+        divEl.removeChild(divEl.firstChild);
+    }
+    for (let i = 0; i < comments.length; i++){
+        let comment = comments[i];
+        const liEl = document.createElement('li');
+        liEl.appendChild(document.createTextNode(`: ${comment.body}`)); 
+        divEl.appendChild(liEl);
+    }
 }
 
 function onPostsReceived() {
