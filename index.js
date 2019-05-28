@@ -34,8 +34,8 @@ function createPostsList(posts) {
     return ulEl;
 }
 
-function showNestedUl(id){
-    const nestedUls = document.getElementsByClassName('nestedUl')
+function showNestedUl(id,className){
+    const nestedUls = document.getElementsByClassName(className)
     for (let i = 0; i < nestedUls.length; i++){
         nestedUls[i].classList.add('hidden');
     }
@@ -52,7 +52,7 @@ function onPostClicked(postId){
 function onCommentsReceived(){
     const text = this.responseText;
     const comments = JSON.parse(text);
-    showNestedUl(comments[0].postId);
+    showNestedUl(comments[0].postId, 'nestedUl');
 
     const divEl = document.getElementById('nestedUl'+ comments[0].postId);
 
@@ -80,7 +80,8 @@ function onPostsReceived() {
     divEl.appendChild(createPostsList(posts));
 }
 
-function onLoadPosts() {
+function onLoadUserContent() {
+    document.getElementById('albums').classList.remove('hidden');
     const el = this;
     const userId = el.getAttribute('data-user-id');
 
@@ -123,7 +124,8 @@ function createUsersTableBody(users) {
         const buttonEl = document.createElement('button');
         buttonEl.textContent = user.name;
         buttonEl.setAttributeNode(dataUserIdAttr);
-        buttonEl.addEventListener('click', onLoadPosts);
+        buttonEl.addEventListener('click',onLoadUserContent);
+        buttonEl.addEventListener('click',onLoadAlbums);
 
         const nameTdEl = document.createElement('td');
         nameTdEl.appendChild(buttonEl);
@@ -163,9 +165,31 @@ function onLoadUsers() {
     xhr.send();
 }
 
+function showOnlyPosts(){
+    const postsContentEl = document.getElementById('posts-content');
+    const albumsContentEl = document.getElementById('albums-content')
+
+    postsContentEl.classList.remove('hidden');
+    albumsContentEl.classList.add('hidden');
+}
+
+function showOnlyAlbums(){
+    const postsContentEl = document.getElementById('posts-content');
+    const albumsContentEl = document.getElementById('albums-content')
+
+    albumsContentEl.classList.remove('hidden');
+    postsContentEl.classList.add('hidden');
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
     usersDivEl = document.getElementById('users');
     postsDivEl = document.getElementById('posts');
     loadButtonEl = document.getElementById('load-users');
     loadButtonEl.addEventListener('click', onLoadUsers);
+
+    let loadAlbumsButtonEl = document.getElementById('load-albums');
+    loadAlbumsButtonEl.addEventListener('click', showOnlyAlbums);
+
+    let loadPostsButtonEl = document.getElementById('load-posts');
+    loadPostsButtonEl.addEventListener('click', showOnlyPosts);
 });
