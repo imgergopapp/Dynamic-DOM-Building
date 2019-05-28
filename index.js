@@ -12,12 +12,12 @@ function createPostsList(posts) {
 
         const linkEl = document.createElement('a');
 
-        linkEl.textContent =post.title;
-        linkEl.href="javascript:void(0);";
-        linkEl.onclick = function() {onPostClicked(i+1)};         
-        
+        linkEl.textContent = post.title;
+        linkEl.href = "javascript:void(0);";
+        linkEl.onclick = function () { onPostClicked(i + 1) };
+
         nestedUlEl = document.createElement('ul');
-        nestedUlEl.id = ('id','nestedUl'+(i+1));
+        nestedUlEl.id = ('id', 'nestedUl' + (i + 1));
         nestedUlEl.classList.add('nestedUl');
 
         const pEl = document.createElement('p');
@@ -34,35 +34,35 @@ function createPostsList(posts) {
     return ulEl;
 }
 
-function showNestedUl(id,className){
+function showNestedUl(id, className) {
     const nestedUls = document.getElementsByClassName(className)
-    for (let i = 0; i < nestedUls.length; i++){
+    for (let i = 0; i < nestedUls.length; i++) {
         nestedUls[i].classList.add('hidden');
     }
-    nestedUls[id-1].classList.remove('hidden');
+    nestedUls[id - 1].classList.remove('hidden');
 }
 
-function onPostClicked(postId){
+function onPostClicked(postId) {
     const xhr = new XMLHttpRequest();
     xhr.addEventListener('load', onCommentsReceived);
     xhr.open('GET', BASE_URL + '/comments?postId=' + postId);
     xhr.send();
 }
 
-function onCommentsReceived(){
+function onCommentsReceived() {
     const text = this.responseText;
     const comments = JSON.parse(text);
     showNestedUl(comments[0].postId, 'nestedUl');
 
-    const divEl = document.getElementById('nestedUl'+ comments[0].postId);
+    const divEl = document.getElementById('nestedUl' + comments[0].postId);
 
     while (divEl.firstChild) {
         divEl.removeChild(divEl.firstChild);
     }
-    for (let i = 0; i < comments.length; i++){
+    for (let i = 0; i < comments.length; i++) {
         let comment = comments[i];
         const liEl = document.createElement('li');
-        liEl.appendChild(document.createTextNode(`: ${comment.body}`)); 
+        liEl.appendChild(document.createTextNode(`: ${comment.body}`));
         divEl.appendChild(liEl);
     }
 }
@@ -124,8 +124,8 @@ function createUsersTableBody(users) {
         const buttonEl = document.createElement('button');
         buttonEl.textContent = user.name;
         buttonEl.setAttributeNode(dataUserIdAttr);
-        buttonEl.addEventListener('click',onLoadUserContent);
-        buttonEl.addEventListener('click',onLoadAlbums);
+        buttonEl.addEventListener('click', onLoadUserContent);
+        buttonEl.addEventListener('click', onLoadAlbums);
 
         const nameTdEl = document.createElement('td');
         nameTdEl.appendChild(buttonEl);
@@ -165,7 +165,7 @@ function onLoadUsers() {
     xhr.send();
 }
 
-function showOnlyPosts(){
+function showOnlyPosts() {
     const postsContentEl = document.getElementById('posts-content');
     const albumsContentEl = document.getElementById('albums-content')
 
@@ -173,7 +173,7 @@ function showOnlyPosts(){
     albumsContentEl.classList.add('hidden');
 }
 
-function showOnlyAlbums(){
+function showOnlyAlbums() {
     const postsContentEl = document.getElementById('posts-content');
     const albumsContentEl = document.getElementById('albums-content')
 
