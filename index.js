@@ -14,10 +14,10 @@ function createPostsList(posts) {
 
         linkEl.textContent = post.title;
         linkEl.href = "javascript:void(0);";
-        linkEl.onclick = function () { onPostClicked(i + 1) };
+        linkEl.onclick = function () { onPostClicked(post.id) };
 
         nestedUlEl = document.createElement('ul');
-        nestedUlEl.id = ('id', 'nestedUl' + (i + 1));
+        nestedUlEl.id = ('id', 'nestedUl' + post.id);
         nestedUlEl.classList.add('nestedUl');
 
         const pEl = document.createElement('p');
@@ -39,7 +39,8 @@ function showNestedUl(id, className) {
     for (let i = 0; i < nestedUls.length; i++) {
         nestedUls[i].classList.add('hidden');
     }
-    nestedUls[id - 1].classList.remove('hidden');
+    currentEl= document.getElementById(className+id);
+    currentEl.classList.remove('hidden');
 }
 
 function onPostClicked(postId) {
