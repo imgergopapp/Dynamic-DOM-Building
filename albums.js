@@ -8,10 +8,10 @@ function createAlbumsList(albums) {
 
         linkEl.textContent = album.title;
         linkEl.href = "javascript:void(0);";
-        linkEl.onclick = function () { onAlbumClicked(i + 1) };
+        linkEl.onclick = function () {onAlbumClicked(album.id)};
 
         nestedUlEl = document.createElement('ul');
-        nestedUlEl.id = ('id', 'nestedAlbumUl' + (i + 1));
+        nestedUlEl.id = ('id', 'nestedAlbumUl' +  album.id);
         nestedUlEl.classList.add('nestedAlbumUl');
 
         const pEl = document.createElement('p');
